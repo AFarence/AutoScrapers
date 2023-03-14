@@ -26,7 +26,7 @@ headers = {
 # In[3]:
 
 
-url = 'https://www.redfin.com/county/479/FL/Miami-Dade-County/filter/include=sold-1wk'
+url = 'https://www.redfin.com/county/442/FL/Broward-County/filter/sort=hi-price,include=sold-1wk'
 
 
 # In[4]:
@@ -129,8 +129,8 @@ scopes = [
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
     json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
 file = gspread.authorize(credentials)
-sheet = file.open("MiamiDade_RedfinLiveFeed")
-sheet = sheet.sheet1
+sheet = file.open("RedfinFeed")
+sheet = sheet.broward
 
 
 # In[ ]:
