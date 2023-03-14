@@ -20,7 +20,7 @@ jobs:
         pip install -r requirements.txt
     - name: Convert Jupyter notebook to Python script
       run: |
-        jupyter nbconvert --to script Miami-Dade_Redfin.ipynb
+        jupyter nbconvert --to script Redfin_MD/Miami-Dade_Redfin.ipynb
     - name: Run scraper and push to Google Sheets
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
