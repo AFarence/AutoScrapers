@@ -1,8 +1,6 @@
 pandas
 numpy
-playwright
 beautifulsoup4
 oauth2client
 gspread
 requests
-jupyter
