@@ -116,30 +116,29 @@ print(df)
 # In[14]:
 
 
-# scopes = [
-# 'https://www.googleapis.com/auth/spreadsheets',
-# 'https://www.googleapis.com/auth/drive'
-# ]
+scopes = [
+'https://www.googleapis.com/auth/spreadsheets',
+'https://www.googleapis.com/auth/drive'
+]
 
-# credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-#     json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
-# file = gspread.authorize(credentials)
-# sheet = file.open("MiamiDade_RedfinLiveFeed")
-# sheet = sheet.sheet1
-
-
-# # In[ ]:
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+    json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
+file = gspread.authorize(credentials)
+sheet = file.open("MiamiDade_RedfinLiveFeed")
+sheet = sheet.sheet1
 
 
-# # Clear existing data (optional)
-# sheet.clear()
+# In[ ]:
 
 
-# # In[ ]:
+# Clear existing data (optional)
+sheet.clear()
 
 
-# header = df.columns.tolist()
-# data = df.values.tolist()
-# sheet.insert_row(header, 1)
-# sheet.insert_rows(data, 2)
+# In[ ]:
 
+
+header = df.columns.tolist()
+data = df.values.tolist()
+sheet.insert_row(header, 1)
+sheet.insert_rows(data, 2)
