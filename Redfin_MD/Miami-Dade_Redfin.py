@@ -51,20 +51,25 @@ try:
 except Exception as e:
     print(f'{e} -- response fail!')
 
-
-# In[5]:
-
-
+# Get just the hyperlink
 url_list = []
 for x in url_soup:
-    url_list.append(x['href'])    
-url_list_no_dups = list(set(url_list))
+    url_list.append(x['href'])  
 
+# Use a dictionary to keep track of elements we've already encountered
+seen = {}
+
+# Create a new list with duplicates removed
+new_list = []
+for item in url_list:
+    if item not in seen:
+        new_list.append(item)
+        seen[item] = True
 
 # In[6]:
 
 
-data = {'Address':address_soup,'Price':price_soup,'URL':url_list_no_dups}
+data = {'Address':address_soup,'Price':price_soup,'URL':new_list}
 
 
 # In[7]:
@@ -116,29 +121,29 @@ print(df)
 # In[14]:
 
 
-scopes = [
-'https://www.googleapis.com/auth/spreadsheets',
-'https://www.googleapis.com/auth/drive'
-]
+# scopes = [
+# 'https://www.googleapis.com/auth/spreadsheets',
+# 'https://www.googleapis.com/auth/drive'
+# ]
 
-credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
-file = gspread.authorize(credentials)
-sheet = file.open("MiamiDade_RedfinLiveFeed")
-sheet = sheet.sheet1
-
-
-# In[ ]:
+# credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+#     json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
+# file = gspread.authorize(credentials)
+# sheet = file.open("MiamiDade_RedfinLiveFeed")
+# sheet = sheet.sheet1
 
 
-# Clear existing data (optional)
-sheet.clear()
+# # In[ ]:
 
 
-# In[ ]:
+# # Clear existing data (optional)
+# sheet.clear()
 
 
-header = df.columns.tolist()
-data = df.values.tolist()
-sheet.insert_row(header, 1)
-sheet.insert_rows(data, 2)
+# # In[ ]:
+
+
+# header = df.columns.tolist()
+# data = df.values.tolist()
+# sheet.insert_row(header, 1)
+# sheet.insert_rows(data, 2)
