@@ -22,4 +22,7 @@ jobs:
       env:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
-        python Redfin_MD/Miami-Dade_Redfin.py
+        python Redfin/Miami-Dade.py
+        python Redfin/PalmBeach.py
+        python Redfin/Broward.py
+        python Redfin/CookCounty.py
