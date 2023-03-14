@@ -129,8 +129,7 @@ scopes = [
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
     json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
 file = gspread.authorize(credentials)
-sheet = file.open("RedfinFeed")
-sheet = sheet.sheet4
+sheet = file.open("RedfinFeed").worksheet("CookCounty")
 
 
 # In[ ]:
