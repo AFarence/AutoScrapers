@@ -26,7 +26,7 @@ headers = {
 # In[3]:
 
 
-url = 'https://www.redfin.com/county/479/FL/Miami-Dade-County/filter/include=sold-1wk'
+url = 'https://www.redfin.com/county/479/FL/Miami-Dade-County/filter/sort=hi-price,include=sold-1wk'
 
 
 # In[4]:
