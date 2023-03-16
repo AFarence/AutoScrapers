@@ -135,8 +135,8 @@ sheet = file.open("RedfinFeed").worksheet("Broward")
 # In[ ]:
 
 
-# Clear existing data (optional)
-sheet.clear()
+# # Clear existing data (optional)
+# sheet.clear()
 
 
 # In[ ]:
