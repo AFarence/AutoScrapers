@@ -104,9 +104,6 @@ def update_spreadsheet(spreadsheet, df):
     header = df.columns.tolist()
     data = df.values.tolist()
 
-    # Insert blank row at the top
-    sheet.insert_row('', 1)
-
     # Write new data and header in the second row
     sheet.insert_row(header, 2)
     sheet.insert_rows(data, 3)
