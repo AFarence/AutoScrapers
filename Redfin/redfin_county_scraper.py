@@ -107,8 +107,8 @@ def update_spreadsheet(spreadsheet, df):
     # Write new data at the top
     # sheet.update('A1', [header] + data)
     # write a blank row
-    sheet.insert_row(header, 2)
-    sheet.insert_rows(data, 3)
+    sheet.insert_row(header, 1)
+    sheet.insert_rows(data, 2)
 
 
 for key in scrape_dict.keys():
