@@ -56,10 +56,13 @@ def scrape_redfin(url,headers):
     seen = {}
 
     # Create a new list with duplicates removed
-    new_list = [item for item in url_list if item not in seen]
-    seen.update({item: True for item in new_list})
+    new_list = []
+    for item in url_list:
+        if item not in seen:
+            new_list.append(item)
+            seen[item] = True
 
-    print(f'Price {len(price_soup)} :: Address {len(address_soup)} :: URL f{len(url_soup)}')
+    print(f'Price {len(price_soup)} :: Address {len(address_soup)} :: URL {len(url_soup)}')
 
     data = {'Address':address_soup,'Price':price_soup,'URL':new_list}
 
