@@ -114,3 +114,9 @@ def update_spreadsheet(spreadsheet, df):
 
     # Write new data at the top
     sheet.update('A1', [header] + data)
+
+
+for key in scrape_dict.keys():
+    df = scrape_redfin(scrape_dict[key], headers)
+    update_spreadsheet(key, df)
+
