@@ -33,6 +33,8 @@ scopes = [
 'https://www.googleapis.com/auth/drive'
 ]
 
+empty_series = pd.Series(['','','',''])
+
 def scrape_redfin(url,headers):
 
     try:
@@ -100,6 +102,8 @@ def update_spreadsheet(spreadsheet, df):
     # sheet.clear()
 
     df['Scrape_Date'] = datetime_str
+
+    df = pd.concat([df,empty_series])
 
     header = df.columns.tolist()
     data = df.values.tolist()
