@@ -96,16 +96,32 @@ def update_spreadsheet(spreadsheet, df):
     header = df.columns.tolist()
     data = df.values.tolist()
 
-    header = df.columns.tolist()
-    data = df.values.tolist()
-    sheet.append_rows([header] + data, value_input_option='USER_ENTERED')
+    # Write new data and header in the second row
+    sheet.insert_row([], 1)
+    sheet.insert_row(header, 2)
+    sheet.insert_rows(data, 3)
 
+# for key in scrape_dict.keys():
+#     df = scrape_redfin(scrape_dict[key], headers)
+#     update_spreadsheet(key, df)
 
-    # # Write new data and header in the second row
-    # sheet.insert_row([], 1)
-    # sheet.insert_row(header, 2)
-    # sheet.insert_rows(data, 3)
+from multiprocessing import Pool
 
-for key in scrape_dict.keys():
+# Define the number of workers to use
+num_workers = 4
+
+# Define a function to perform the scrape and update the spreadsheet for a single key
+def scrape_and_update(key):
     df = scrape_redfin(scrape_dict[key], headers)
     update_spreadsheet(key, df)
+
+if __name__ == '__main__':
+    # Create a pool of workers
+    pool = Pool(num_workers)
+
+    # Use the pool to run the scrape_and_update function for each key in parallel
+    pool.map(scrape_and_update, scrape_dict.keys())
+
+    # Close the pool to free up resources
+    pool.close()
+    pool.join()
