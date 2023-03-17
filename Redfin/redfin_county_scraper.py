@@ -97,7 +97,7 @@ def update_spreadsheet(spreadsheet, df):
     sheet = file.open("RedfinFeed").worksheet(spreadsheet)
 
     # Clear existing data (optional)
-    sheet.clear()
+    # sheet.clear()
 
     df['Scrape_Date'] = datetime_str
 
