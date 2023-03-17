@@ -33,8 +33,6 @@ scopes = [
 'https://www.googleapis.com/auth/drive'
 ]
 
-empty_list = [' ',' ',' ',' ']
-
 def scrape_redfin(url,headers):
 
     try:
@@ -108,7 +106,8 @@ def update_spreadsheet(spreadsheet, df):
 
     # Write new data at the top
     # sheet.update('A1', [header] + data)
-    sheet.insert_row(empty_list, 1)
+    # write a blank row
+    sheet.append_row([])
     sheet.insert_row(header, 2)
     sheet.insert_rows(data, 3)
 
