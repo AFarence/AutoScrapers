@@ -38,37 +38,26 @@ def scrape_redfin(url,headers):
     try:
         response = requests.get(url,headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
-        try:
-            price_soup = soup.find_all('span',{'class':'homecardV2Price'})
-        except:
-            price_soup = None
-        try:
-            address_soup = soup.find_all('span',{'class':'collapsedAddress primaryLine'})
-        except:
-            address_soup = None
-        try:
-            card_soup = soup.find('div',{'class':'HomeCardsContainer flex flex-wrap'})
-            url_soup = card_soup.find_all('a')
-        except:
-            url_soup = None
+
+        price_soup = soup.find_all('span',{'class':'homecardV2Price'}) or None
+
+        address_soup = soup.find_all('span',{'class':'collapsedAddress primaryLine'}) or None
+
+        url_soup = soup.find('div',{'class':'HomeCardsContainer flex flex-wrap'}).find_all('a') or None
+
     except Exception as e:
         print(f'{e} -- response fail!')
         return None
 
     # Get just the hyperlink
-    url_list = []
-    for x in url_soup:
-        url_list.append(x['href'])  
+    url_list = [x['href'] for x in url_soup]  
 
     # Use a dictionary to keep track of elements we've already encountered
     seen = {}
 
     # Create a new list with duplicates removed
-    new_list = []
-    for item in url_list:
-        if item not in seen:
-            new_list.append(item)
-            seen[item] = True
+    new_list = [item for item in url_list if item not in seen]
+    seen.update({item: True for item in new_list})
 
     data = {'Address':address_soup,'Price':price_soup,'URL':new_list}
 
@@ -96,9 +85,6 @@ def update_spreadsheet(spreadsheet, df):
     file = gspread.authorize(credentials)
     sheet = file.open("RedfinFeed").worksheet(spreadsheet)
 
-    # Clear existing data (optional)
-    # sheet.clear()
-
     df['Scrape_Date'] = datetime_str
 
     print(df)
@@ -110,12 +96,6 @@ def update_spreadsheet(spreadsheet, df):
     sheet.insert_row([], 1)
     sheet.insert_row(header, 2)
     sheet.insert_rows(data, 3)
-
-
-    # # sheet.update('A1', [header] + data)
-    # sheet.insert_row(header, 1)
-    # sheet.insert_rows(data, 2)
-
 
 for key in scrape_dict.keys():
     df = scrape_redfin(scrape_dict[key], headers)
