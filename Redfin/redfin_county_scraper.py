@@ -101,10 +101,6 @@ def update_spreadsheet(spreadsheet, df):
     sheet.insert_row(header, 2)
     sheet.insert_rows(data, 3)
 
-# for key in scrape_dict.keys():
-#     df = scrape_redfin(scrape_dict[key], headers)
-#     update_spreadsheet(key, df)
-
 from multiprocessing import Pool
 
 # Define the number of workers to use
