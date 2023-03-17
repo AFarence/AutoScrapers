@@ -33,7 +33,7 @@ scopes = [
 'https://www.googleapis.com/auth/drive'
 ]
 
-empty_series = pd.Series(['','','',''])
+empty_series = pd.Series([' ',' ',' ',' '])
 
 def scrape_redfin(url,headers):
 
