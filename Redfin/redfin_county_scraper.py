@@ -33,7 +33,7 @@ scopes = [
 'https://www.googleapis.com/auth/drive'
 ]
 
-empty_list = ['','','','']
+empty_list = [' ',' ',' ',' ']
 
 def scrape_redfin(url,headers):
 
