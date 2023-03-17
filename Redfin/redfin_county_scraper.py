@@ -33,7 +33,7 @@ scopes = [
 'https://www.googleapis.com/auth/drive'
 ]
 
-empty_series = pd.Series([' ',' ',' ',' '])
+empty_list = ['','','','']
 
 def scrape_redfin(url,headers):
 
@@ -103,15 +103,14 @@ def update_spreadsheet(spreadsheet, df):
 
     df['Scrape_Date'] = datetime_str
 
-    df = pd.concat([df,empty_series])
-
     header = df.columns.tolist()
     data = df.values.tolist()
 
     # Write new data at the top
     # sheet.update('A1', [header] + data)
-    sheet.insert_row(header, 1)
-    sheet.insert_rows(data, 2)
+    sheet.insert_row(empty_list, 1)
+    sheet.insert_row(header, 2)
+    sheet.insert_rows(data, 3)
 
 
 for key in scrape_dict.keys():
