@@ -104,14 +104,6 @@ def update_spreadsheet(spreadsheet, df):
     header = df.columns.tolist()
     data = df.values.tolist()
 
-    # Get existing data
-    existing_data = sheet.get_all_values()
-
-    # Shift existing data down one row
-    for i in range(len(existing_data), 0, -1):
-        for j in range(len(existing_data[0])):
-            sheet.update_cell(i + len(data), j + 1, existing_data[i-1][j])
-
     # Write new data at the top
     sheet.update('A1', [header] + data)
 
