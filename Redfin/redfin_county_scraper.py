@@ -8,6 +8,16 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 import json
 
+### For appending the date and time the scraper ran ###
+import datetime
+import pytz
+
+# Get current date and time in Eastern Time (US)
+et = pytz.timezone('US/Eastern')
+now = datetime.datetime.now(et)
+
+# Format date and time as a string
+datetime_str = now.strftime('%Y-%m-%d %H:%M:%S')
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
@@ -88,6 +98,8 @@ def update_spreadsheet(spreadsheet, df):
 
     # Clear existing data (optional)
     sheet.clear()
+
+    df['Scrape_Date'] = datetime_str
 
     header = df.columns.tolist()
     data = df.values.tolist()
