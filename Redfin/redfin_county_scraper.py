@@ -101,15 +101,20 @@ def update_spreadsheet(spreadsheet, df):
 
     df['Scrape_Date'] = datetime_str
 
-    print(df)
-
     header = df.columns.tolist()
     data = df.values.tolist()
 
-    # Write new data at the top
-    # sheet.update('A1', [header] + data)
-    sheet.insert_row(header, 1)
-    sheet.insert_rows(data, 2)
+    # Insert blank row at the top
+    sheet.insert_row('', 1)
+
+    # Write new data and header in the second row
+    sheet.insert_row(header, 2)
+    sheet.insert_rows(data, 3)
+
+
+    # # sheet.update('A1', [header] + data)
+    # sheet.insert_row(header, 1)
+    # sheet.insert_rows(data, 2)
 
 
 for key in scrape_dict.keys():
