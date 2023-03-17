@@ -101,6 +101,8 @@ def update_spreadsheet(spreadsheet, df):
 
     df['Scrape_Date'] = datetime_str
 
+    print(df)
+
     header = df.columns.tolist()
     data = df.values.tolist()
 
