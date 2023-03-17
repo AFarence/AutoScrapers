@@ -107,8 +107,9 @@ def update_spreadsheet(spreadsheet, df):
     data = df.values.tolist()
 
     # Write new data and header in the second row
-    sheet.insert_row(header, 1)
-    sheet.insert_rows(data, 2)
+    sheet.insert_row([], 1)
+    sheet.insert_row(header, 2)
+    sheet.insert_rows(data, 3)
 
 
     # # sheet.update('A1', [header] + data)
