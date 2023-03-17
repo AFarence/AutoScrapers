@@ -80,20 +80,19 @@ def scrape_redfin(url,headers):
 
     return df
 
-def update_spreadsheet(spreadsheet, sheet_name, df):
-
+def update_spreadsheet(spreadsheet, df):
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
+        json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
     file = gspread.authorize(credentials)
-    sheet = file.open(spreadsheet).worksheet(sheet_name)
+    sheet = file.open("RedfinFeed").worksheet(spreadsheet)
 
-    # Clear existing data
+    # Clear existing data (optional)
     sheet.clear()
 
     header = df.columns.tolist()
     data = df.values.tolist()
-    sheet.insert_row(header, 1)
-    sheet.insert_data(data, 2)
+    sheet.update('A1', [header] + data)
+
 
 for key in scrape_dict.keys():
     df = scrape_redfin(scrape_dict[key], headers)
