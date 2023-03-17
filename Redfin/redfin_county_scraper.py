@@ -101,12 +101,13 @@ def update_spreadsheet(spreadsheet, df):
 
     df['Scrape_Date'] = datetime_str
 
+    df = df.fillna('')
+
     header = df.columns.tolist()
     data = df.values.tolist()
 
     # Write new data at the top
     # sheet.update('A1', [header] + data)
-    # write a blank row
     sheet.insert_row(header, 1)
     sheet.insert_rows(data, 2)
 
@@ -114,4 +115,3 @@ def update_spreadsheet(spreadsheet, df):
 for key in scrape_dict.keys():
     df = scrape_redfin(scrape_dict[key], headers)
     update_spreadsheet(key, df)
-
