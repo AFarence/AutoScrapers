@@ -43,7 +43,7 @@ def scrape_redfin(url,headers):
 
         address_soup = soup.find_all('span',{'class':'collapsedAddress primaryLine'}) or None
 
-        url_soup = soup.find('div',{'class':'HomeCardsContainer flex flex-wrap'}).find_all('a') or None
+        url_soup = soup.select('.HomeCardsContainer a') or None
 
     except Exception as e:
         print(f'{e} -- response fail!')
@@ -58,6 +58,8 @@ def scrape_redfin(url,headers):
     # Create a new list with duplicates removed
     new_list = [item for item in url_list if item not in seen]
     seen.update({item: True for item in new_list})
+
+    print(f'Price {len(price_soup)} :: Address {len(address_soup)} :: URL f{len(url_soup)}')
 
     data = {'Address':address_soup,'Price':price_soup,'URL':new_list}
 
