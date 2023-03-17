@@ -74,8 +74,7 @@ def scrape_redfin(url,headers):
         r['Price'] = r['Price'].text
         r['Address'] = r['Address'].text
 
-    df['Price'] = df['Price'].str.replace('$','',regex=True)
-    df['Price'] = df['Price'].str.replace(',','',regex=True)
+    df['Price'] = df['Price'].str.replace('$','',regex=True).str.replace(',','',regex=True)
     df['Price'] = pd.to_numeric(df['Price'])
 
     df = df.sort_values(by='Price', ascending=False)
@@ -97,10 +96,15 @@ def update_spreadsheet(spreadsheet, df):
     header = df.columns.tolist()
     data = df.values.tolist()
 
-    # Write new data and header in the second row
-    sheet.insert_row([], 1)
-    sheet.insert_row(header, 2)
-    sheet.insert_rows(data, 3)
+    header = df.columns.tolist()
+    data = df.values.tolist()
+    sheet.append_rows([header] + data, value_input_option='USER_ENTERED')
+
+
+    # # Write new data and header in the second row
+    # sheet.insert_row([], 1)
+    # sheet.insert_row(header, 2)
+    # sheet.insert_rows(data, 3)
 
 for key in scrape_dict.keys():
     df = scrape_redfin(scrape_dict[key], headers)
