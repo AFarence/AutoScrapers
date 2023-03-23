@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 
 # Construct the full path to the CSV file
-csv_file_path = os.path.join(os.path.dirname(__file__))
+csv_file_path = os.path.join(os.path.dirname(__file__), 'data.csv')
 print(csv_file_path)
 
 headers = {
@@ -144,4 +144,4 @@ df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].str.replace('•','',reg
 
 df_final['BOUGHT COMPANIES'] = df_final['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-df_final.to_csv('{csv_file_path}/SF_Redfin_agent_data.csv')
+df_final.to_csv(f'{csv_file_path}')
