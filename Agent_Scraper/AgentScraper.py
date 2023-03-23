@@ -143,8 +143,7 @@ with tqdm(total=len(df)) as pbar:
 
                 part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-                part = part.fillna('Not Found')
-
+                print(part)
                 update_spreadsheet(part)
                 
                 success = True
