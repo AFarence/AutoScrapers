@@ -142,6 +142,8 @@ with tqdm(total=len(df)) as pbar:
 
             part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
+            update_spreadsheet(part)
+            
             success = True
         except Exception as e:
             retry_count += 1
@@ -153,5 +155,3 @@ with tqdm(total=len(df)) as pbar:
         
     retry_count = 0
     success = False
-
-update_spreadsheet(part)
