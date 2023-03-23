@@ -12,10 +12,10 @@ from bs4 import BeautifulSoup
 from time import sleep
 
 # Construct the full path to the CSV file
-csv_file_path = os.path.join(os.path.dirname(__file__), 'SF_Redfin_Agent_data.csv')
-csv_file_path_part = os.path.join(os.path.dirname(__file__))
-print(csv_file_path)
-print(csv_file_path_part)
+# csv_file_path = os.path.join(os.path.dirname(__file__), 'SF_Redfin_Agent_data.csv')
+# csv_file_path_part = os.path.join(os.path.dirname(__file__))
+# print(csv_file_path)
+# print(csv_file_path_part)
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
@@ -129,10 +129,10 @@ with tqdm(total=len(df)) as pbar:
         success = False
 
         # Write the current part of the dataframe to a CSV
-        part.to_csv(f'{csv_file_path}/part_{i}.csv', index=False)
+        part.to_csv(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/part_{i}.csv', index=False)
 
 # Get a list of all CSV files with 'part' in the name
-file_list = glob.glob(f'{csv_file_path_part}/part*.csv')
+file_list = glob.glob(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/part*.csv')
 
 # Read in each CSV file and combine into one dataframe
 df_final = pd.concat((pd.read_csv(f) for f in file_list), ignore_index=True)
@@ -146,4 +146,4 @@ df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].str.replace('•','',reg
 
 df_final['BOUGHT COMPANIES'] = df_final['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-df_final.to_csv(f'{csv_file_path}')
+df_final.to_csv(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/SF_Agent_Data.csv')
