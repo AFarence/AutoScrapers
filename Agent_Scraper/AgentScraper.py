@@ -16,7 +16,7 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 }
 
-df = pd.read_csv('redfin_2023-03-21-15-19-02.csv')
+df = pd.read_csv('/Users/afarence/Documents/coding_projects/trd_scrapers/auto_scrapers/Scrapers/Agent_Scraper/redfin_2023-03-21-15-19-02.csv')
 df = df.head(100)
 
 def agent_snagger(URL):
@@ -118,13 +118,11 @@ with tqdm(total=len(df)) as pbar:
                 success = True
             except Exception as e:
                 retry_count += 1
-                clear_output()
                 print(e)
                 sleep(4)  # Wait for 1 second before retrying
 
         if not success:
             print("Code failed after {} retries".format(max_retries))
-            clear_output()
             
         retry_count = 0
         success = False
