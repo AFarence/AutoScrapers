@@ -121,13 +121,4 @@ with tqdm(total=len(df)) as pbar:
     retry_count = 0
     success = False
 
-# Apply the clean_text function to the desired column
-df['LIST COMPANIES'] = df['LIST COMPANIES'].apply(clean_text)
-df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].apply(clean_text)
-
-df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
-df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('•','',regex=True)
-
-df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].str.replace('•','',regex=True)
-
 df.to_csv(csv_file_path)
