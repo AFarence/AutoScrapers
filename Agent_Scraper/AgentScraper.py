@@ -103,6 +103,7 @@ split_by = round(len(df) / 100)
 df_list = np.array_split(df, split_by)
 
 with tqdm(total=len(df)) as pbar:
+    # Loop over each part of the dataframe
     for i, part in enumerate(df_list):
         results = []
         # Process each URL in the current part of the dataframe
@@ -110,48 +111,48 @@ with tqdm(total=len(df)) as pbar:
             result = agent_snagger(url)
             results.append(result)
             pbar.update(1)
-        
-            while retry_count < max_retries and not success:
-                try:
-                    part['BROKER INFO'] = results
-                    part_results = pd.DataFrame(results)
-                    part['ALL INFO'] = part_results['agent_soup']
-                    part['LIST INFO'] = part_results['list_soup']
-                    part['BOUGHT INFO'] = part_results['bought_soup']
-                    part['ALL INFO CLEAN'] = part['ALL INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                    part['LIST INFO CLEAN'] = part['LIST INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                    part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                    part.reset_index(inplace=True, drop=True)
-                    # Apply the function to the SOLD INFO CLEAN column
-                    part['LIST INFO CLEAN'] = part['LIST INFO CLEAN'].fillna('')
-                    part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO CLEAN'].fillna('')
-                    part[['LIST AGENTS', 'LIST COMPANIES']] = part['LIST INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
-                    part[['BOUGHT AGENTS', 'BOUGHT COMPANIES']] = part['BOUGHT INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
-                    part['LIST AGENTS'] = part['LIST AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                    part['LIST COMPANIES'] = part['LIST COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                    part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                    part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                    part['LIST AGENTS'] = part['LIST AGENTS'].str.replace('Listed by','')
-                    part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].str.replace('Bought with','')
-                    # Apply the clean_text function to the desired column
-                    part['LIST COMPANIES'] = part['LIST COMPANIES'].apply(clean_text)
-                    part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].apply(clean_text)
+            
+        while retry_count < max_retries and not success:
+            try:
+                part['BROKER INFO'] = results
+                part_results = pd.DataFrame(results)
+                part['ALL INFO'] = part_results['agent_soup']
+                part['LIST INFO'] = part_results['list_soup']
+                part['BOUGHT INFO'] = part_results['bought_soup']
+                part['ALL INFO CLEAN'] = part['ALL INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+                part['LIST INFO CLEAN'] = part['LIST INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+                part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+                part.reset_index(inplace=True, drop=True)
+                # Apply the function to the SOLD INFO CLEAN column
+                part['LIST INFO CLEAN'] = part['LIST INFO CLEAN'].fillna('')
+                part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO CLEAN'].fillna('')
+                part[['LIST AGENTS', 'LIST COMPANIES']] = part['LIST INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
+                part[['BOUGHT AGENTS', 'BOUGHT COMPANIES']] = part['BOUGHT INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
+                part['LIST AGENTS'] = part['LIST AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+                part['LIST COMPANIES'] = part['LIST COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+                part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+                part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+                part['LIST AGENTS'] = part['LIST AGENTS'].str.replace('Listed by','')
+                part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].str.replace('Bought with','')
+                # Apply the clean_text function to the desired column
+                part['LIST COMPANIES'] = part['LIST COMPANIES'].apply(clean_text)
+                part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].apply(clean_text)
 
-                    part['LIST COMPANIES'] = part['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
-                    part['LIST COMPANIES'] = part['LIST COMPANIES'].str.replace('•','',regex=True)
+                part['LIST COMPANIES'] = part['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
+                part['LIST COMPANIES'] = part['LIST COMPANIES'].str.replace('•','',regex=True)
 
-                    part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].str.replace('•','',regex=True)
+                part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-                    update_spreadsheet(part)
-                    
-                    success = True
-                except Exception as e:
-                    retry_count += 1
-                    print(e)
-                    sleep(4)  # Wait for 4 seconds before retrying
+                update_spreadsheet(part)
+                
+                success = True
+            except Exception as e:
+                retry_count += 1
+                print(e)
+                sleep(4)  # Wait for 4 seconds before retrying
 
-            if not success:
-                print("Code failed after {} retries".format(max_retries))
-    
-            retry_count = 0
-            success = False
+        if not success:
+            print("Code failed after {} retries".format(max_retries))
+
+        retry_count = 0
+        success = False
