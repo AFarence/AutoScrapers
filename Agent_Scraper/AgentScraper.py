@@ -84,8 +84,6 @@ def update_spreadsheet(df):
         json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
     file = gspread.authorize(credentials)
     sheet = file.open("DallasRedfinScraper").worksheet("ScrapedData")
-
-    df = df.fillna('Not Available')
     
     data = df.values.tolist()
 
@@ -144,6 +142,8 @@ with tqdm(total=len(df)) as pbar:
                 part['LIST COMPANIES'] = part['LIST COMPANIES'].str.replace('•','',regex=True)
 
                 part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].str.replace('•','',regex=True)
+
+                part = part.fillna('Not Found')
 
                 update_spreadsheet(part)
                 
