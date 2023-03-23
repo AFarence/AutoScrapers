@@ -4,7 +4,7 @@ import re
 import numpy as np
 import os
 
-import tqdm
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 from time import sleep
