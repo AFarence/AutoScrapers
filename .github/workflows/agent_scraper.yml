@@ -18,7 +18,11 @@ jobs:
           pip install -r requirements2.txt
       - name: Collect agent data
         run: |
-          python Agent_Scraper/AgentScraper.py          
-      - name: List contents of directory
+          python Agent_Scraper/AgentScraper.py
+      - name: Commit changes
         run: |
-          ls Agent_Scraper/
+          git config --global user.email "aef2917@columbia.edu"
+          git config --global user.name "AFarence"
+          git add Agent_Scraper/SF_Redfin_Agent_data.csv
+          git commit -m "Add SF_Redfin_Agent_data.csv"
+          git push origin main
