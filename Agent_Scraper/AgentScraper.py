@@ -111,6 +111,7 @@ with tqdm(total=len(df)) as pbar:
         for url in part['URL']:
             result = agent_snagger(url)
             results.append(result)
+            print(result)
             pbar.update(1)
             
         while retry_count < max_retries and not success:
