@@ -16,7 +16,7 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 }
 
-df = pd.read_csv('redfin_2023-03-21-15-19-02.csv')
+df = pd.read_csv('Agent_Scraper/redfin_2023-03-21-15-19-02.csv')
 df = df.head(100)
 
 def agent_snagger(URL):
