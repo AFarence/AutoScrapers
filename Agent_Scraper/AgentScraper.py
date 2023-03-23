@@ -20,7 +20,7 @@ headers = {
 }
 
 df = pd.read_csv('Agent_Scraper/redfin_2023-03-21-15-19-02.csv')
-df = df.head(10)
+df = df.tail(10)
 
 def agent_snagger(URL):
     try:
