@@ -18,4 +18,7 @@ jobs:
           pip install -r requirements2.txt
       - name: Collect agent data
         run: |
-          python Agent_Scraper/AgentScraper.py
+          python Agent_Scraper/AgentScraper.py          
+      - name: List contents of directory
+        run: |
+          ls Agent_Scraper/
