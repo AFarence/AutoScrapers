@@ -8,7 +8,6 @@ import os
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
-from IPython.display import clear_output
 
 from time import sleep
 
