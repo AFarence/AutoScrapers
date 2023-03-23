@@ -2,8 +2,6 @@ import requests
 import pandas as pd
 import re
 import numpy as np
-import random
-import glob
 import os
 
 from tqdm import tqdm
@@ -11,15 +9,22 @@ from bs4 import BeautifulSoup
 
 from time import sleep
 
-# Construct the full path to the CSV file
-csv_file_path = os.path.join(os.path.dirname(__file__), 'SF_Redfin_Agent_data.csv')
-print(csv_file_path)
+### For Google Sheets ###
+import os
+from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+import json
+
+scopes = [
+'https://www.googleapis.com/auth/spreadsheets',
+'https://www.googleapis.com/auth/drive'
+]
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 }
 
-df = pd.read_csv('Agent_Scraper/redfin_2023-03-21-15-19-02.csv')
+df = pd.read_csv('Agent_Scraper/2023_Brokerage_Dallas_Redfin.csv')
 
 def agent_snagger(URL):
     try:
@@ -72,19 +77,39 @@ def clean_text(text):
         return re.sub(pattern, "", text).strip()
     else:
         return text
-    
+
+# Define a function to write data to Google sheets
+def update_spreadsheet(df):
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
+    file = gspread.authorize(credentials)
+    sheet = file.open("DallasRedfinScraper").worksheet("ScrapedData")
+
+    data = df.values.tolist()
+
+    # Write new data and header in the second row
+    sheet.insert_rows(data, 1)
+
+# Define variables for max retries, retry county, and the success boolean
 max_retries = 3
 retry_count = 0
 success = False
 
+# Figure out how to split the df so it always runs in chunks of 100
+
+split_by = round(len(df) / 100)
+
+# Split the dataframe into XX equal parts
+df_list = np.array_split(df, split_by)
 
 with tqdm(total=len(df)) as pbar:
-    # Process each URL in the current part of the dataframe
-    results = []
-    for url in df['URL']:
-        result = agent_snagger(url)
-        results.append(result)
-        pbar.update(1)
+    for i, part in enumerate(df_list):
+        results = []
+        # Process each URL in the current part of the dataframe
+        for url in df['URL']:
+            result = agent_snagger(url)
+            results.append(result)
+            pbar.update(1)
         
     while retry_count < max_retries and not success:
         try:
@@ -108,11 +133,20 @@ with tqdm(total=len(df)) as pbar:
             df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
             df['LIST AGENTS'] = df['LIST AGENTS'].str.replace('Listed by','')
             df['BOUGHT AGENTS'] = df['BOUGHT AGENTS'].str.replace('Bought with','')
+            # Apply the clean_text function to the desired column
+            df['LIST COMPANIES'] = df['LIST COMPANIES'].apply(clean_text)
+            df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].apply(clean_text)
+
+            df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
+            df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('•','',regex=True)
+
+            df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].str.replace('•','',regex=True)
+
             success = True
         except Exception as e:
             retry_count += 1
             print(e)
-            sleep(4)  # Wait for 1 second before retrying
+            sleep(4)  # Wait for 4 seconds before retrying
 
     if not success:
         print("Code failed after {} retries".format(max_retries))
@@ -120,4 +154,4 @@ with tqdm(total=len(df)) as pbar:
     retry_count = 0
     success = False
 
-df.to_csv(csv_file_path)
+update_spreadsheet(df)
