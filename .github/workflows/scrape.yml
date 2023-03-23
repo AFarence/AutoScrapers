@@ -1,25 +1,28 @@
-name: Daily Scraper
+name: Agent Scraper
 
 on:
-  schedule:
-    - cron: '0 12 * * 1-5' # This runs the workflow every day at 8 a.m. Eastern Time
   workflow_dispatch: # This allows the workflow to be triggered manually
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run scraper and push to Google Sheets
-      env:
-        SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-      run: |
-        python Redfin/redfin_county_scraper.py
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements2.txt
+      - name: Collect agent data
+        run: |
+          python Agent_Scraper/AgentScraper.py
+      - name: Commit changes
+        run: |
+          git config --global user.email "aef2197@columbia.edu"
+          git config --global user.name "AFarence"
+          git add Agent_Scraper/SF_Redfin_Agent_data.csv
+          git commit -m "Add SF_Redfin_Agent_data.csv"
+          git push origin main
