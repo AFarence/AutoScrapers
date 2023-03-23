@@ -30,6 +30,7 @@ def agent_snagger(URL):
     try:
         response = requests.get(URL, headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
+        print(response)
         
         # Extract agent info
         agent_soup = soup.find_all('div', {'class': 'agent-info-content'}) or None
