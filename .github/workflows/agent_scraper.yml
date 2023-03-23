@@ -15,14 +15,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements2.txt
+          pip install -r requirements.txt
       - name: Collect agent data
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         run: |
           python Agent_Scraper/AgentScraper.py
-      - name: Commit changes
-        run: |
-          git config --global user.email "aef2917@columbia.edu"
-          git config --global user.name "AFarence"
-          git add Agent_Scraper/SF_Redfin_Agent_data.csv
-          git commit -m "Add SF_Redfin_Agent_data.csv"
-          git push origin main
