@@ -85,9 +85,11 @@ def update_spreadsheet(df):
     file = gspread.authorize(credentials)
     sheet = file.open("DallasRedfinScraper").worksheet("ScrapedData")
 
+    df = df.fillna('Not Available')
+    
     data = df.values.tolist()
 
-    # Write new data and header in the second row
+    # Write new data and
     sheet.insert_rows(data, 1)
 
 # Define variables for max retries, retry county, and the success boolean
