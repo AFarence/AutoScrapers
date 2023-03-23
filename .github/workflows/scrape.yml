@@ -20,6 +20,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run scraper and push to Google Sheets
       env:
-        SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
       run: |
         python Redfin/redfin_county_scraper.py
