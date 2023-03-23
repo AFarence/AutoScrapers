@@ -1,4 +1,4 @@
-name: Daily Scraper
+name: Scrapers
 
 on:
   schedule:
@@ -23,22 +23,16 @@ jobs:
         SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       run: |
         python Redfin/redfin_county_scraper.py
-  
 
-name: Agent Scraper
-on:
-  workflow_dispatch:
-  
-jobs:
-  agent_scrape:
+  agent-scraper:
     runs-on: macos-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Setup Python
+      - uses: actions/checkout@v2
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: '3.9'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
