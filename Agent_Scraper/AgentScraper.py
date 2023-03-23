@@ -129,10 +129,10 @@ with tqdm(total=len(df)) as pbar:
         success = False
 
         # Write the current part of the dataframe to a CSV
-        part.to_csv(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/part_{i}.csv', index=False)
+        part.to_csv(f'/AFarence/AutoScrapers/tree/main/Agent_Scraper/part_{i}.csv', index=False)
 
 # Get a list of all CSV files with 'part' in the name
-file_list = glob.glob(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/part*.csv')
+file_list = glob.glob(f'/AFarence/AutoScrapers/tree/main/Agent_Scraper/part*.csv')
 
 # Read in each CSV file and combine into one dataframe
 df_final = pd.concat((pd.read_csv(f) for f in file_list), ignore_index=True)
@@ -146,4 +146,4 @@ df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].str.replace('•','',reg
 
 df_final['BOUGHT COMPANIES'] = df_final['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-df_final.to_csv(f'/AFarence/AutoScrapers/edit/main/Agent_Scraper/SF_Agent_Data.csv')
+df_final.to_csv(f'/AFarence/AutoScrapers/tree/main/Agent_Scraper/SF_Agent_Data.csv')
