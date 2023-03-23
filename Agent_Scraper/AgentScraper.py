@@ -13,16 +13,14 @@ from time import sleep
 
 # Construct the full path to the CSV file
 csv_file_path = os.path.join(os.path.dirname(__file__), 'SF_Redfin_Agent_data.csv')
-csv_file_path_part = os.path.join(os.path.dirname(__file__))
 print(csv_file_path)
-print(csv_file_path_part)
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 }
 
 df = pd.read_csv('Agent_Scraper/redfin_2023-03-21-15-19-02.csv')
-df = df.head(50)
+df = df.head(10)
 
 def agent_snagger(URL):
     try:
@@ -80,70 +78,56 @@ max_retries = 3
 retry_count = 0
 success = False
 
-# Split the dataframe into XX equal parts
-df_list = np.array_split(df, 5)
-
 
 with tqdm(total=len(df)) as pbar:
-    # Loop over each part of the dataframe
-    for i, part in enumerate(df_list):
-        results = []
-        # Process each URL in the current part of the dataframe
-        for url in part['URL']:
-            result = agent_snagger(url)
-            results.append(result)
-            pbar.update(1)
-            
-        while retry_count < max_retries and not success:
-            try:
-                part['BROKER INFO'] = results
-                part_results = pd.DataFrame(results)
-                part['ALL INFO'] = part_results['agent_soup']
-                part['LIST INFO'] = part_results['list_soup']
-                part['BOUGHT INFO'] = part_results['bought_soup']
-                part['ALL INFO CLEAN'] = part['ALL INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                part['LIST INFO CLEAN'] = part['LIST INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
-                part.reset_index(inplace=True, drop=True)
-                # Apply the function to the SOLD INFO CLEAN column
-                part['LIST INFO CLEAN'] = part['LIST INFO CLEAN'].fillna('')
-                part['BOUGHT INFO CLEAN'] = part['BOUGHT INFO CLEAN'].fillna('')
-                part[['LIST AGENTS', 'LIST COMPANIES']] = part['LIST INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
-                part[['BOUGHT AGENTS', 'BOUGHT COMPANIES']] = part['BOUGHT INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
-                part['LIST AGENTS'] = part['LIST AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                part['LIST COMPANIES'] = part['LIST COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                part['BOUGHT COMPANIES'] = part['BOUGHT COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
-                part['LIST AGENTS'] = part['LIST AGENTS'].str.replace('Listed by','')
-                part['BOUGHT AGENTS'] = part['BOUGHT AGENTS'].str.replace('Bought with','')
-                success = True
-            except Exception as e:
-                retry_count += 1
-                print(e)
-                sleep(4)  # Wait for 1 second before retrying
+    # Process each URL in the current part of the dataframe
+    results = []
+    for url in df['URL']:
+        result = agent_snagger(url)
+        results.append(result)
+        pbar.update(1)
+        
+    while retry_count < max_retries and not success:
+        try:
+            df['BROKER INFO'] = results
+            part_results = pd.DataFrame(results)
+            df['ALL INFO'] = part_results['agent_soup']
+            df['LIST INFO'] = part_results['list_soup']
+            df['BOUGHT INFO'] = part_results['bought_soup']
+            df['ALL INFO CLEAN'] = df['ALL INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+            df['LIST INFO CLEAN'] = df['LIST INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+            df['BOUGHT INFO CLEAN'] = df['BOUGHT INFO'].apply(lambda x: [spoonful.text.strip() for spoonful in x] if isinstance(x, list) else None)
+            df.reset_index(inplace=True, drop=True)
+            # Apply the function to the SOLD INFO CLEAN column
+            df['LIST INFO CLEAN'] = df['LIST INFO CLEAN'].fillna('')
+            df['BOUGHT INFO CLEAN'] = df['BOUGHT INFO CLEAN'].fillna('')
+            df[['LIST AGENTS', 'LIST COMPANIES']] = df['LIST INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
+            df[['BOUGHT AGENTS', 'BOUGHT COMPANIES']] = df['BOUGHT INFO CLEAN'].apply(split_agents_companies).apply(pd.Series)
+            df['LIST AGENTS'] = df['LIST AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+            df['LIST COMPANIES'] = df['LIST COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+            df['BOUGHT AGENTS'] = df['BOUGHT AGENTS'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+            df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].apply(lambda x: ', '.join(str(e) for e in x) if len(x) > 0 else float('nan'))
+            df['LIST AGENTS'] = df['LIST AGENTS'].str.replace('Listed by','')
+            df['BOUGHT AGENTS'] = df['BOUGHT AGENTS'].str.replace('Bought with','')
+            success = True
+        except Exception as e:
+            retry_count += 1
+            print(e)
+            sleep(4)  # Wait for 1 second before retrying
 
-        if not success:
-            print("Code failed after {} retries".format(max_retries))
-            
-        retry_count = 0
-        success = False
-
-        # Write the current part of the dataframe to a CSV
-        part.to_csv(f'{csv_file_path_part}/part_{i}.csv', index=False)
-
-# Get a list of all CSV files with 'part' in the name
-file_list = glob.glob(f'{csv_file_path_part}/part*.csv')
-
-# Read in each CSV file and combine into one dataframe
-df_final = pd.concat((pd.read_csv(f) for f in file_list), ignore_index=True)
+    if not success:
+        print("Code failed after {} retries".format(max_retries))
+        
+    retry_count = 0
+    success = False
 
 # Apply the clean_text function to the desired column
-df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].apply(clean_text)
-df_final['BOUGHT COMPANIES'] = df_final['BOUGHT COMPANIES'].apply(clean_text)
+df['LIST COMPANIES'] = df['LIST COMPANIES'].apply(clean_text)
+df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].apply(clean_text)
 
-df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
-df_final['LIST COMPANIES'] = df_final['LIST COMPANIES'].str.replace('•','',regex=True)
+df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('\(agent\)','',regex=True)
+df['LIST COMPANIES'] = df['LIST COMPANIES'].str.replace('•','',regex=True)
 
-df_final['BOUGHT COMPANIES'] = df_final['BOUGHT COMPANIES'].str.replace('•','',regex=True)
+df['BOUGHT COMPANIES'] = df['BOUGHT COMPANIES'].str.replace('•','',regex=True)
 
-df_final.to_csv(csv_file_path)
+df.to_csv(csv_file_path)
