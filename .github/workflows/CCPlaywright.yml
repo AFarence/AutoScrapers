@@ -10,12 +10,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Python and Playwright
+        uses: mheap/setup-playwright@v1
         with:
-          python-version: '3.9'
+          browser: chromium
       - name: Install dependencies
         run: |
+          sudo apt-get install -y libgtk-3-0 libgbm-dev libnss3 libxss1 xvfb
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run scraper and push to Google Sheets
