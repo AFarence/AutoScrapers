@@ -7,4 +7,3 @@ requests
 tqdm
 datetime
 Playwright
-time
