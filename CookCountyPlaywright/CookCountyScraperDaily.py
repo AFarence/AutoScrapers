@@ -121,8 +121,6 @@ def run(playwright: Playwright) -> None:
             except Exception as e:
                 print(f'Navigation failed: {e}')
             
-            browser.close()
-            
         except Exception as e:
             print(f'{doc}:{e}')
 
