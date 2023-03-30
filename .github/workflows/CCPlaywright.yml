@@ -5,23 +5,44 @@ on:
     - cron: '0 11 * * 1-5' # This runs the workflow every day at 6 a.m. Central Time
   workflow_dispatch: # This allows the workflow to be triggered manually
 
+
 jobs:
   build:
-    runs-on: macos-latest
+    name: Scrape Cook County website and push data to Google Sheets
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
       - name: Install dependencies
         run: |
+          npm ci
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Set up Playwright
-        run: npx playwright install-deps chromium # install dependencies for Chromium only
+      - name: Install playwright browsers
+        run: npx playwright install --with-deps
       - name: Run scraper and push to Google Sheets
         env:
           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         run: |
           python CookCountyPlaywright/CookCountyScraperDaily.py
+
+# jobs:
+#   build:
+#     runs-on: macos-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.9'
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#       - name: Set up Playwright
+#         run: npx playwright install-deps chromium # install dependencies for Chromium only
+#       - name: Run scraper and push to Google Sheets
+#         env:
+#           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+#         run: |
+#           python CookCountyPlaywright/CookCountyScraperDaily.py
