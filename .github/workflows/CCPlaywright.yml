@@ -19,7 +19,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Set up Playwright
-        run: npx playwright install-deps chromium # install dependencies for Chromium only
+        run: |
+          npm install -g playwright
+          playwright install
       - name: Run scraper and push to Google Sheets
         env:
           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
