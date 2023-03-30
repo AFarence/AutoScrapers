@@ -7,6 +7,5 @@ requests
 tqdm
 datetime
 Playwright
-json
 os
 time
