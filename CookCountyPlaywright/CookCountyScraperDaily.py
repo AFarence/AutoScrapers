@@ -35,12 +35,14 @@ def page_scraper(page, page_counter, doc):
 
     soup = BeautifulSoup(page, 'html.parser')
 
-    link_suffix = 'https://crs.cookcountyclerkil.gov/'
+    link_suffix = 'https://crs.cookcountyclerkil.gov'
 
     deed_urls = []
-    for link in soup.find_all('a',attrs={'href': re.compile('^/Document/Detail')}):
-        page_link = link_suffix + link.get('href')
-        deed_urls.append(page_link)
+    for link in soup.find_all('a', attrs={'href': re.compile('^/Document/Detail')}):
+        parent = link.find_parent('td', class_='align-middle text-center')
+        if parent is not None:
+            page_link = link_suffix + link.get('href')
+            deed_urls.append(page_link)
 
     df['deed_urls'] = deed_urls
 
