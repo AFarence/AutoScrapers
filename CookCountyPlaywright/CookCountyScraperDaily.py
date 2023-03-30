@@ -157,11 +157,6 @@ scopes = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-# read the contents of the JSON file
-json_file_path = '/Users/afarence/Documents/coding_projects/Projects/CookPropertyScraper/dailyscraper/autoscraper-380600-39280de21cb8.json'
-with open(json_file_path, 'r') as f:
-    json_data = f.read()
-
 # parse the JSON data and create credentials
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
     json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
