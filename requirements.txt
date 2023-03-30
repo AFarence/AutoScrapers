@@ -5,3 +5,9 @@ oauth2client
 gspread
 requests
 tqdm
+re
+datetime
+Playwright
+json
+os
+time
