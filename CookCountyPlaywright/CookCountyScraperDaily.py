@@ -92,7 +92,7 @@ def run(playwright: Playwright) -> None:
         page.locator("input[name=\"LowerLimit\"]").click()
 
         # Fill input[name="LowerLimit"]
-        page.locator("input[name=\"LowerLimit\"]").fill("1000000")
+        page.locator("input[name=\"LowerLimit\"]").fill("4000000")
 
         # Click text=Document Type Search Document Type * ABROGATION ACCEPTANCE ACCEPTANCE OF TRANFER >> button[name="submitButton"]
         page.locator("text=Document Type Search Document Type * ABROGATION ACCEPTANCE ACCEPTANCE OF TRANFER >> button[name=\"submitButton\"]").click()
