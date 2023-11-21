@@ -18,7 +18,7 @@ def run(playwright: Playwright) -> None:
     today_str = today.strftime("%m/%d/%Y")
     yesterday_str = yesterday.strftime("%m/%d/%Y")
 
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     context = browser.new_context()
     page = context.new_page()
     page.goto("https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentType")
