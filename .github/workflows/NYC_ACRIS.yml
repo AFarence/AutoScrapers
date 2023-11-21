@@ -26,4 +26,4 @@ jobs:
         env:
           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         run: | 
-          NYC_Acris_Scraper.py
+          python NYC_Acris_Scraper.py
