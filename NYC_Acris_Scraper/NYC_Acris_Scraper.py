@@ -2,6 +2,10 @@ import pandas as pd
 import re
 from playwright.sync_api import Playwright, sync_playwright, expect
 from datetime import datetime, timedelta
+from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+import os
+import json
 
 df_list = []
 
@@ -118,6 +122,31 @@ def run(playwright: Playwright) -> None:
     # Clean up
     context.close()
     browser.close()
+
+    big_df = big_df.fillna('NA')
+
+    # set up credentials and authorize access
+    scopes = [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive'
+    ]
+
+    # parse the JSON data and create credentials
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        json.loads(os.environ.get('SERVICE_ACCOUNT_JSON')), scopes)
+    file = gspread.authorize(credentials)
+
+    # Open the Google Sheet and specific worksheet
+    sheet = file.open("NYC")
+    worksheet = sheet.worksheet("ACRIS")
+
+    # Clear existing data (optional)
+    worksheet.clear()
+
+    # Write DataFrame to Google Sheet
+    worksheet.update([big_df.columns.values.tolist()] + big_df.values.tolist())
+
+    print(f'Sheet Updated! {big_df.columns.value_counts()}')
 
 with sync_playwright() as playwright:
     run(playwright)
