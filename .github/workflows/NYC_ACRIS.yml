@@ -2,7 +2,7 @@ name: Run ACRIS Scraper
 
 on:
   schedule:
-    - cron: '0 8 * * *' # Runs at 8 a.m. Eastern
+    - cron: '0 12 * * *' # Runs at 8 a.m. Eastern
   workflow_dispatch:
 
 jobs:
