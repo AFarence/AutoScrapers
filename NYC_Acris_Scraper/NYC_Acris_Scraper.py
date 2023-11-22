@@ -9,6 +9,11 @@ import json
 
 df_list = []
 
+# Define your custom headers as a dictionary
+custom_headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.4567.89 Safari/537.36'
+}
+
 def run(playwright: Playwright) -> None:
     # Calculate yesterday's and today's dates
     today = datetime.now()
@@ -19,7 +24,9 @@ def run(playwright: Playwright) -> None:
     yesterday_str = yesterday.strftime("%m/%d/%Y")
 
     browser = playwright.chromium.launch(headless=True)
-    context = browser.new_context()
+    context = browser.new_context(
+        extra_http_headers=custom_headers
+    )
     page = context.new_page()
     page.goto("https://a836-acris.nyc.gov/DS/DocumentSearch/DocumentType")
     page.locator("select[name=\"cmb_date\"]").select_option("DR")
