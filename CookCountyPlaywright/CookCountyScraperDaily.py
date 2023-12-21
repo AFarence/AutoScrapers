@@ -13,8 +13,8 @@ import time
 
 ### Set up start date, end date, and doc list
 
-start_date = '08012023'
-end_date = '09292023'
+start_date = '11012023'
+end_date = '12312023'
 
 run_date = date.today().strftime('%b-%d-%Y')
 
@@ -147,11 +147,6 @@ df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
 df = df.fillna('NA')
 
 print(df.shape)
-
-### For Google Sheets ###
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-import json
 
 # set up credentials and authorize access
 scopes = [
