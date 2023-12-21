@@ -31,7 +31,7 @@ jobs:
       - name: Notify Success on Slack
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"<@U02K48W695W>, <@U03082BUMRT>,<@U032Q17D3LL>, <@U068D0NV9QQ> Cook County Deeds Scraper completed. <https://docs.google.com/spreadsheets/d/12TR_IQqzcCVa-6DOXbZ_N7EY4xwR-SkRvmzX8AZ7u8M/edit?usp=sharing|Spreadsheet Link>"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"<@U02K48W695W>, <@U03082BUMRT>,<@U032Q17D3LL>, <@U068D0NV9QQ> Cook County Deeds Scraper completed. <https://docs.google.com/spreadsheets/d/12TR_IQqzcCVa-6DOXbZ_N7EY4xwR-SkRvmzX8AZ7u8M/edit?usp=sharing|Click here to see the deeds in Google Sheet.>"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Failure on Slack
         if: failure()
