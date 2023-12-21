@@ -31,7 +31,7 @@ jobs:
       - name: Notify Success on Slack
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Cook County Deeds Playwright Scraper completed successfully. Spreadsheet: https://docs.google.com/spreadsheets/d/12TR_IQqzcCVa-6DOXbZ_N7EY4xwR-SkRvmzX8AZ7u8M/edit?usp=sharing"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"@channel Cook County Deeds Scraper completed successfully. https://docs.google.com/spreadsheets/d/12TR_IQqzcCVa-6DOXbZ_N7EY4xwR-SkRvmzX8AZ7u8M/edit?usp=sharing"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Failure on Slack
         if: failure()
