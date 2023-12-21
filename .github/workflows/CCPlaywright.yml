@@ -27,3 +27,13 @@ jobs:
           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
         run: |
           python CookCountyPlaywright/CookCountyScraperDaily.py
+
+      - name: Notify Success on Slack
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Cook County Deeds Playwright Scraper completed successfully. Spreadsheet: <LINK_TO_SPREADSHEET>"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Failure on Slack
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Cook County Deeds Playwright Scraper failed. Please check the logs."}' ${{ secrets.SLACK_WEBHOOK_URL }}
