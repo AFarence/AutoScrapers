@@ -146,6 +146,10 @@ df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
 # Remove NaNs
 df = df.fillna('NA')
 
+# Remove unncessary columns
+df = df.loc[:, ~all_data.columns.str.contains('Unnamed')]
+df = df.drop(columns=['View Doc'])
+
 print(df.shape)
 
 # set up credentials and authorize access
