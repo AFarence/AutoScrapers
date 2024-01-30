@@ -147,7 +147,7 @@ df = pd.concat([pd.read_csv(f) for f in csv_files], ignore_index=True)
 df = df.fillna('NA')
 
 # Remove unncessary columns
-df = df.loc[:, ~all_data.columns.str.contains('Unnamed')]
+df = df.loc[:, ~df.columns.str.contains('Unnamed')]
 df = df.drop(columns=['View Doc'])
 
 print(df.shape)
