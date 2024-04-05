@@ -13,7 +13,7 @@ import time
 
 ### Set up start date, end date, and doc list
 
-start_date = '01312024'
+start_date = '03012024'
 end_date = '03312024'
 
 run_date = date.today().strftime('%b-%d-%Y')
