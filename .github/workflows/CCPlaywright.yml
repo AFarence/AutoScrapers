@@ -1,8 +1,8 @@
 name: Cook County Deeds Playwright Scraper
 
 on:
-  schedule:
-    - cron: '0 11 * * 1-5' # This runs the workflow every day at 6 a.m. Central Time
+  # schedule:
+  #   - cron: '0 11 * * 1-5' # This runs the workflow every day at 6 a.m. Central Time
   workflow_dispatch: # This allows the workflow to be triggered manually
 
 jobs:
